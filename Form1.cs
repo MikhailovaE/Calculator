@@ -11,12 +11,6 @@ namespace Calculator
 {
     public partial class CalculatorForm : Form
     {
-        int a, b;
-        bool positive = true;
-        enum Oper { Plus, Minus, Mult, Div };
-        Oper oper;
-
-
         public CalculatorForm()
         {
             InitializeComponent();
@@ -24,12 +18,7 @@ namespace Calculator
 
         private void Button12_Click(object sender, EventArgs e)
         {
-
-            a = SevenConverter.ToDec(textBox1.Text);
-            textBox1.Clear();
-            oper = Oper.Minus;
-            label.Text = SevenConverter.FromDec(a) + "-";
-            positive = true;
+            textBox1.Text = textBox1.Text + "-";
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -44,11 +33,7 @@ namespace Calculator
 
         private void PlusButton_Click(object sender, EventArgs e)
         {
-            a = SevenConverter.ToDec(textBox1.Text);
-            textBox1.Clear();
-            oper = Oper.Plus;
-            label.Text = SevenConverter.FromDec(a) + "+";
-            positive = true;
+            textBox1.Text = textBox1.Text + "+";
         }
 
         private void OneButton_Click(object sender, EventArgs e)
@@ -83,26 +68,17 @@ namespace Calculator
 
         private void MultButton_Click(object sender, EventArgs e)
         {
-            a = SevenConverter.ToDec(textBox1.Text);
-            textBox1.Clear();
-            oper = Oper.Mult;
-            label.Text = SevenConverter.FromDec(a) + "×";
-            positive = true;
+            textBox1.Text = textBox1.Text + "*";
         }
 
         private void DivButton_Click(object sender, EventArgs e)
         {
-            a = SevenConverter.ToDec(textBox1.Text);
-            textBox1.Clear();
-            oper = Oper.Div;
-            label.Text = SevenConverter.FromDec(a) + "/";
-            positive = true;
+            textBox1.Text = textBox1.Text + "/";
         }
 
         private void EqualButton_Click(object sender, EventArgs e)
         {
             calculate();
-            label.Text = "";
         }
 
         private void ZeroButton_Click(object sender, EventArgs e)
@@ -113,45 +89,29 @@ namespace Calculator
         private void CButton_Click(object sender, EventArgs e)
         {
             textBox1.Text = "";
-            label.Text = "";
         }
 
         private void ArrowButton_Click(object sender, EventArgs e)
         {
-            int length = textBox1.Text.Length - 1;
-            string text = textBox1.Text;
-            textBox1.Clear();
-            for (int i = 0; i < length; i++)
-            {
-                textBox1.Text = textBox1.Text + text[i];
-            }
+            if (textBox1.Text.Length > 0)
+                textBox1.Text = textBox1.Text.Remove(textBox1.Text.Length - 1);
+        }
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            textBox1.Text = textBox1.Text + "(";
+        }
+
+        private void Button2_Click(object sender, EventArgs e)
+        {
+            textBox1.Text = textBox1.Text + ")";
         }
 
         private void calculate()
         {
-            switch (oper)
-            {
-                case Oper.Plus:
-                    b = a + SevenConverter.ToDec(textBox1.Text);
-                    textBox1.Text = SevenConverter.FromDec(b);
-                    break;
-                case Oper.Minus:
-                    b = a - SevenConverter.ToDec(textBox1.Text);
-                    textBox1.Text = SevenConverter.FromDec(b);
-                    break;
-                case Oper.Mult:
-                    b = a * SevenConverter.ToDec(textBox1.Text);
-                    textBox1.Text = SevenConverter.FromDec(b);
-                    break;
-                case Oper.Div:
-                    b = a / SevenConverter.ToDec(textBox1.Text);
-                    textBox1.Text = SevenConverter.FromDec(b);
-                    break;
-
-                default:
-                    break;
-            }
-
+            String expr = textBox1.Text;
+            textBox1.Clear();
+            textBox1.Text = SevenConverter.FromDec(Expression.ParseExpr(ref expr));
         }
     }
 }
